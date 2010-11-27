@@ -1,4 +1,0 @@
-BattleBoard
-===========
-
-Use it
