@@ -25,9 +25,7 @@ class Game < JPanel
 
   def initialize(w,h)
     super() # must call for add_component_listener to work
-    @command_mask = Toolkit.default_toolkit.getMenuShortcutKeyMask()
-    puts @command_mask
-    @command_mask = 256
+    @command_mask = java.lang.System.getProperty("os.name").downcase.index( "mac" ) ? 256 : 128
     @scale = 1.0
     @tx = 1
     @ty = 1
