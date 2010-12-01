@@ -1,4 +1,4 @@
 class RenderLayer
-  attr_accessor :object_manager
+  attr_accessor :campaign, :battle
 
 end

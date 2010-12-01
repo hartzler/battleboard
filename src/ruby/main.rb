@@ -17,7 +17,8 @@ local_require 'clear_layer'
 local_require 'map_layer'
 local_require 'ogre_layer'
 local_require 'fps_layer'
-local_require 'object_manager'
+local_require 'campaign'
+local_require 'battle'
 
 class Game < JPanel
   include java.awt.event.MouseWheelListener
@@ -25,22 +26,22 @@ class Game < JPanel
   include java.awt.event.MouseMotionListener
 
   def initialize(w,h)
-    super() # must call for add_component_listener to work
+    super() # must call for add_*_listener to work
     @command_mask = java.lang.System.getProperty("os.name").downcase.index( "mac" ) ? 256 : 128
     @scale = 1.0
     @tx = 1
     @ty = 1
     @sx = 0
     @sy = 0
-    @thack = false
     @layers = [ 
       ClearLayer.new,
       MapLayer.new,
       OgreLayer.new(w,h),
       FpsLayer.new(1)
     ]
-    @object_manager = ObjectManager.new
-    @layers.each{|l| l.object_manager = @object_manager}
+    @campaign = Campaign.new
+    @battle = Battle.new(:campaign=>@campaign)
+    @layers.each{|l| l.campaign = @campaign; l.battle = @battle}
     add_mouse_wheel_listener(self)
     add_mouse_motion_listener(self)
     add_mouse_listener(self)
@@ -88,12 +89,14 @@ class Game < JPanel
   end
 end
 
+# wrap in jframe for window/title
 app = JFrame.new('BattleBoard')
 app.default_close_operation = JFrame::EXIT_ON_CLOSE
 app.size = Dimension.new(800,600)
 app.content_pane.add(game = Game.new(app.width,app.height))
 app.show
 
+# main loop
 while(true) do
   game.repaint
   sleep(0.001)
