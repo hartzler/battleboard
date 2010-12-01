@@ -1,5 +1,5 @@
 class ClearLayer < RenderLayer
-  def render(g)
+  def render(g,width,height)
     t = g.get_transform
     x = t.scale_x
     y = t.scale_y

@@ -8,7 +8,7 @@ class FpsLayer < RenderLayer
     @start = Time.now
   end
 
-  def render(g)
+  def render(g,width,height)
     @frame += 1
     time = (Time.now-@start) 
     if time > @report_interval

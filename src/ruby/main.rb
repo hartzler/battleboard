@@ -17,6 +17,7 @@ local_require 'clear_layer'
 local_require 'map_layer'
 local_require 'ogre_layer'
 local_require 'fps_layer'
+local_require 'object_manager'
 
 class Game < JPanel
   include java.awt.event.MouseWheelListener
@@ -38,7 +39,8 @@ class Game < JPanel
       OgreLayer.new(w,h),
       FpsLayer.new(1)
     ]
-    @layers.each{|l| add_component_listener(l)}
+    @object_manager = ObjectManager.new
+    @layers.each{|l| l.object_manager = @object_manager}
     add_mouse_wheel_listener(self)
     add_mouse_motion_listener(self)
     add_mouse_listener(self)
@@ -47,7 +49,7 @@ class Game < JPanel
   def paintComponent(g)
     g.scale(@scale,@scale)
     g.translate(@tx,@ty)
-    @layers.each{|l| l.render(g) }
+    @layers.each{|l| l.render(g,width,height) }
   end
   
   def mouseWheelMoved(e)
