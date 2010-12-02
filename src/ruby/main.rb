@@ -6,11 +6,13 @@ java_import java.awt.Font
 java_import java.awt.Dimension
 java_import java.awt.Toolkit
 require 'ostruct'
+#require 'json'
 
 def local_require(path)
   require File.expand_path( File.dirname(__FILE__) ) + '/' + path + '.rb'
 end
 
+local_require 'irb'
 local_require 'image_loader'
 local_require 'render_layer'
 local_require 'clear_layer'
@@ -24,6 +26,8 @@ class Game < JPanel
   include java.awt.event.MouseWheelListener
   include java.awt.event.MouseListener
   include java.awt.event.MouseMotionListener
+
+  attr_reader :layers, :campaign, :battle
 
   def initialize(w,h)
     super() # must call for add_*_listener to work
@@ -95,6 +99,14 @@ app.default_close_operation = JFrame::EXIT_ON_CLOSE
 app.size = Dimension.new(800,600)
 app.content_pane.add(game = Game.new(app.width,app.height))
 app.show
+
+# for remote irb fun
+APP = app
+GAME = game
+
+# start IRB server
+DRb.start_service 'druby://:7777', IRB::RemoteService.new
+STDERR.puts "* IRB::RemoteService available at #{DRb.uri.inspect}"
 
 # main loop
 while(true) do

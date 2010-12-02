@@ -1,4 +1,5 @@
 class OgreLayer < RenderLayer
+  attr_accessor :img,:ogres
   def initialize(width,height)
     @img = ImageLoader.load('ogre.png')
     @ogres = (1..20).map{|i| OpenStruct.new(:x=>rand(width),:y=>rand(height),:dx=>rand(20)+1,:dy=>rand(20)+1) }

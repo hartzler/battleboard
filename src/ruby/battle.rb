@@ -7,13 +7,14 @@
 # add indexes as required...
 #
 class Battle
-  attr_reader :campaign, :name, :info, :levels, :objects
+  attr_reader :campaign
   def initialize(options)
     @campaign = options[:campaign] or raise "Campaign required"
-    @name = options[:name] || "battle"
-    @info = {} # battle meta info
-    @levels = [] # {},{},{}... order by zorder; 
-    @objects = {} # id => props
+    @data = {}
+    @data[:name] = options[:name] || "battle"
+    @data[:info] = {} # battle meta info
+    @data[:levels] = [] # {},{},{}... order by zorder; 
+    @data[:objects] = {} # id => props
   end
 
   def save
@@ -22,10 +23,11 @@ class Battle
     # flush changesets
     # write new json
     # mv new -> old
+    @campaign.save_battle(@data[:name],JSON.generate(@data))
   end
 
   def load
-    # load name.battle
+    @data = JSON.parse(@campaign.load_battle(@data[:name]))
   end
   
   # add changeset

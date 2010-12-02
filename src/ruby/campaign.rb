@@ -33,4 +33,13 @@ class Campaign
     # TODO: copy into resources
     @resources[name]=path
   end
+
+  def load_battle(name)
+    open(File.expand_path(name + '.battle', @path, 'r')) {|f| f.read}
+  end
+ 
+  def save_battle(name,data)
+    open(File.expand_path(name + '.battle', @path, 'w')) {|f| f.write data}
+  end
 end
+
