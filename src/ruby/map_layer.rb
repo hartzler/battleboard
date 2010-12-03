@@ -1,9 +1,7 @@
 class MapLayer < RenderLayer
-  def initialize
-    @img = ImageLoader.load('hospice.png')
-  end
-
   def render(g,width,height)
-    g.drawImage(@img,0,0,nil)
+    battle.objects.each do |oid,o|
+      g.drawImage(battle.load_image(o['image']),o['x'],o['y'],nil)
+    end
   end 
 end

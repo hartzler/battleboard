@@ -5,8 +5,9 @@ java_import java.awt.Color
 java_import java.awt.Font
 java_import java.awt.Dimension
 java_import java.awt.Toolkit
+require "rubygems"
 require 'ostruct'
-#require 'json'
+require 'json'
 
 def local_require(path)
   require File.expand_path( File.dirname(__FILE__) ) + '/' + path + '.rb'
@@ -33,18 +34,23 @@ class Game < JPanel
     super() # must call for add_*_listener to work
     @command_mask = java.lang.System.getProperty("os.name").downcase.index( "mac" ) ? 256 : 128
     @scale = 1.0
-    @tx = 1
-    @ty = 1
+    @tx = 0
+    @ty = 0
     @sx = 0
     @sy = 0
     @layers = [ 
       ClearLayer.new,
       MapLayer.new,
-      OgreLayer.new(w,h),
+    #  OgreLayer.new(w,h),
       FpsLayer.new(1)
     ]
-    @campaign = Campaign.new
+    @campaign = Campaign.new(:path=>'test/campaign1')
+    @campaign.add_resource('images/hospice','test/campaign1/resources/images/hospice.png')
+    @campaign.add_resource('images/ogre','test/campaign1/resources/images/ogre.png')
     @battle = Battle.new(:campaign=>@campaign)
+    @battle.objects['hospice'] = {'id' => 'hospice', 'image'=>'hospice', 'x'=>0, 'y'=>0}
+    @battle.objects['ogre1'] = {'id' => 'ogre1', 'image'=>'ogre', 'x'=>100, 'y'=>100}
+    @battle.objects['ogre2'] = {'id' => 'ogre2', 'image'=>'ogre', 'x'=>300, 'y'=>500}
     @layers.each{|l| l.campaign = @campaign; l.battle = @battle}
     add_mouse_wheel_listener(self)
     add_mouse_motion_listener(self)
@@ -52,16 +58,16 @@ class Game < JPanel
   end
  
   def paintComponent(g)
-    g.scale(@scale,@scale)
     g.translate(@tx,@ty)
+    g.scale(@scale,@scale)
     @layers.each{|l| l.render(g,width,height) }
   end
   
   def mouseWheelMoved(e)
     amt = - e.wheel_rotation / 50.0
     if @scale + amt > 0.1 && @scale + amt < 10.0
-      @tx += (@scale*e.x) - (@scale+amt)*e.x
-      @ty += (@scale*e.y) - (@scale+amt)*e.y
+      @tx -= (e.x/@scale) - e.x/(@scale+amt)
+      @ty -= (e.y/@scale) - e.y/(@scale+amt)
       @scale += amt 
     end
   end

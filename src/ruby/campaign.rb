@@ -28,9 +28,13 @@ class Campaign
     @path = path
   end
 
+  def load_image(name)
+    puts "images/#{name} => #{@resources["images/#{name}"]}"
+    ImageLoader.load(@resources["images/#{name}"]) 
+  end
+
   # copies into resources/ folder
   def add_resource(name,path)
-    # TODO: copy into resources
     @resources[name]=path
   end
 

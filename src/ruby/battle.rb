@@ -7,14 +7,27 @@
 # add indexes as required...
 #
 class Battle
-  attr_reader :campaign
+  attr_reader :campaign, :data
   def initialize(options)
     @campaign = options[:campaign] or raise "Campaign required"
+    @images = {}
     @data = {}
     @data[:name] = options[:name] || "battle"
     @data[:info] = {} # battle meta info
     @data[:levels] = [] # {},{},{}... order by zorder; 
     @data[:objects] = {} # id => props
+  end
+
+  def objects
+    @data[:objects]
+  end
+
+  def levels
+    @data[:levels]
+  end
+
+  def load_image(name)
+    @images[name] ||= @campaign.load_image(name)
   end
 
   def save
