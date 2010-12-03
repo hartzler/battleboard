@@ -22,8 +22,8 @@ class Battle
     @data[:objects]
   end
 
-  def levels
-    @data[:levels]
+  def info
+    @data[:info]
   end
 
   def load_image(name)
@@ -46,6 +46,10 @@ class Battle
   # add changeset
   def change(changeset)
     # create?/update/delete
+  end
+
+  def tokens
+    objects.values.select{|o| o['layer']=='token'}
   end
 
 end

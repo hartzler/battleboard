@@ -38,6 +38,15 @@ class Campaign
     @resources[name]=path
   end
 
+  def size_to_grid_squares(size)
+    case size
+    when 'large'
+      [2,2]
+    else
+      raise "Unknow size #{size}"
+    end
+  end
+
   def load_battle(name)
     open(File.expand_path(name + '.battle', @path, 'r')) {|f| f.read}
   end

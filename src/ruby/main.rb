@@ -17,11 +17,12 @@ local_require 'irb'
 local_require 'image_loader'
 local_require 'render_layer'
 local_require 'clear_layer'
-local_require 'map_layer'
-local_require 'ogre_layer'
+local_require 'background_layer'
+local_require 'token_layer'
 local_require 'fps_layer'
 local_require 'campaign'
 local_require 'battle'
+local_require 'overrides'
 
 class Game < JPanel
   include java.awt.event.MouseWheelListener
@@ -40,17 +41,18 @@ class Game < JPanel
     @sy = 0
     @layers = [ 
       ClearLayer.new,
-      MapLayer.new,
-    #  OgreLayer.new(w,h),
+      BackgroundLayer.new,
+      TokenLayer.new,
       FpsLayer.new(1)
     ]
     @campaign = Campaign.new(:path=>'test/campaign1')
     @campaign.add_resource('images/hospice','test/campaign1/resources/images/hospice.png')
     @campaign.add_resource('images/ogre','test/campaign1/resources/images/ogre.png')
     @battle = Battle.new(:campaign=>@campaign)
-    @battle.objects['hospice'] = {'id' => 'hospice', 'image'=>'hospice', 'x'=>0, 'y'=>0}
-    @battle.objects['ogre1'] = {'id' => 'ogre1', 'image'=>'ogre', 'x'=>100, 'y'=>100}
-    @battle.objects['ogre2'] = {'id' => 'ogre2', 'image'=>'ogre', 'x'=>300, 'y'=>500}
+    @battle.info['grid_ratio'] = 30
+    @battle.objects['hospice'] = {'id' => 'hospice', 'image'=>'hospice', 'x'=>0, 'y'=>0, 'layer'=>'background'}
+    @battle.objects['ogre1'] = {'id' => 'ogre1', 'image'=>'ogre', 'x'=>100, 'y'=>100, 'layer'=>'token', 'size'=>'large'}
+    @battle.objects['ogre2'] = {'id' => 'ogre2', 'image'=>'ogre', 'x'=>300, 'y'=>500, 'layer'=>'token', 'size'=>'large'}
     @layers.each{|l| l.campaign = @campaign; l.battle = @battle}
     add_mouse_wheel_listener(self)
     add_mouse_motion_listener(self)
@@ -76,6 +78,14 @@ class Game < JPanel
     if command?(e)
       @sx=e.x
       @sy=e.y
+    else
+      global_x = e.x/@scale - @tx
+      global_y = e.y/@scale - @ty
+      @battle.tokens.select do |o| 
+        size = @campaign.size_to_grid_squares(o['size'])
+        (global_x > o.x && global_x < (o.x + size[0] * @battle.info.grid_ratio)) &&
+          (global_y > o.y && global_y < (o.y + size[1] * @battle.info.grid_ratio))
+      end.each{|o| o.selected = !o.selected}
     end
   end
   def mouseDragged(e)
@@ -85,6 +95,13 @@ class Game < JPanel
       @sx = e.x
       @sy = e.y
       puts "dragged x: %d y: %d" % [@tx,@ty]
+    else
+      global_x = e.x/@scale - @tx
+      global_y = e.y/@scale - @ty
+      @battle.tokens.select(&:selected).each do |o| 
+        o.x = global_x
+        o.y = global_y
+      end
     end
   end
 

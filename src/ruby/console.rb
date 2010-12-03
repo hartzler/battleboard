@@ -17,4 +17,4 @@ module IRB
   end
 end
 
-IRB.start_remote "druby://192.168.1.110:7777"
+IRB.start_remote "druby://localhost:7777"
