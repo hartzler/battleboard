@@ -6,7 +6,6 @@ class GridLayer < RenderLayer
       g.color = Color::WHITE
       current_x = 0
       current_y = 0
-      bg_size = battle.background_size
       battle.objects.values.select{|o| o['layer']=='background'}.each do |o|
         img = battle.load_image(o['image'])
         map_size_x = img.width
