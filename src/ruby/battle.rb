@@ -51,16 +51,4 @@ class Battle
   def tokens
     objects.values.select{|o| o['layer']=='token'}
   end
-
-  def background_size
-    bg_size_x = 0
-    bg_size_y = 0
-    objects.values.select{|o| o['layer']=='background'}.each do |o|
-      img = load_image(o['image'])
-      bg_size_x += img.width
-      bg_size_y += img.height
-    end
-    [bg_size_x, bg_size_y]
-  end
-
 end
