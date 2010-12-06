@@ -14,12 +14,13 @@ def local_require(path)
 end
 
 local_require 'irb'
-local_require 'image_loader'
 local_require 'render_layer'
-local_require 'clear_layer'
 local_require 'background_layer'
-local_require 'token_layer'
+local_require 'clear_layer'
 local_require 'fps_layer'
+local_require 'grid_layer'
+local_require 'image_loader'
+local_require 'token_layer'
 local_require 'campaign'
 local_require 'battle'
 local_require 'overrides'
@@ -42,6 +43,7 @@ class Game < JPanel
     @layers = [ 
       ClearLayer.new,
       BackgroundLayer.new,
+      GridLayer.new,
       TokenLayer.new,
       FpsLayer.new(1)
     ]
@@ -50,6 +52,9 @@ class Game < JPanel
     @campaign.add_resource('images/ogre','test/campaign1/resources/images/ogre.png')
     @battle = Battle.new(:campaign=>@campaign)
     @battle.info['grid_ratio'] = 30
+    @battle.info['grid_show'] = true
+    @battle.info['grid_offset_x'] = 10
+    @battle.info['grid_offset_y'] = 10
     @battle.objects['hospice'] = {'id' => 'hospice', 'image'=>'hospice', 'x'=>0, 'y'=>0, 'layer'=>'background'}
     @battle.objects['ogre1'] = {'id' => 'ogre1', 'image'=>'ogre', 'x'=>100, 'y'=>100, 'layer'=>'token', 'size'=>'large'}
     @battle.objects['ogre2'] = {'id' => 'ogre2', 'image'=>'ogre', 'x'=>300, 'y'=>500, 'layer'=>'token', 'size'=>'large'}
