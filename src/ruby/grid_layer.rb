@@ -10,14 +10,16 @@ class GridLayer < RenderLayer
         img = battle.load_image(o['image'])
         map_size_x = img.width
         map_size_y = img.height
-        while current_x < map_size_x && current_y < map_size_y do
-         start_x = battle.info['grid_offset_x'] + current_x
-         start_y = battle.info['grid_offset_y'] + current_y
-         g.drawLine(start_x, o.x, start_x, map_size_y)
-         g.drawLine(o.y, start_y,  map_size_x, start_y)
-         current_x += grid_ratio
-         current_y += grid_ratio
-       end
+        while current_x < map_size_x 
+          start_x = battle.info['grid_offset_x'] + current_x
+          g.drawLine(start_x, o.x, start_x, map_size_y)
+          current_x += grid_ratio
+        end
+        while current_y < map_size_y do
+          start_y = battle.info['grid_offset_y'] + current_y
+          current_y += grid_ratio
+          g.drawLine(o.y, start_y,  map_size_x, start_y)
+        end 
       end
     end
   end
