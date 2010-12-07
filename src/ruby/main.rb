@@ -8,6 +8,8 @@ java_import java.awt.Toolkit
 require "rubygems"
 require 'ostruct'
 require 'json'
+require 'fileutils'
+require 'find'
 
 def local_require(path)
   require File.expand_path( File.dirname(__FILE__) ) + '/' + path + '.rb'
@@ -48,16 +50,22 @@ class Game < JPanel
       FpsLayer.new(1)
     ]
     @campaign = Campaign.new(:path=>'test/campaign1')
-    @campaign.add_resource('images/hospice','test/campaign1/resources/images/hospice.png')
-    @campaign.add_resource('images/ogre','test/campaign1/resources/images/ogre.png')
-    @battle = Battle.new(:campaign=>@campaign)
-    @battle.info['grid_ratio'] = 30
-    @battle.info['grid_show'] = true
-    @battle.info['grid_offset_x'] = 10
-    @battle.info['grid_offset_y'] = 10
-    @battle.objects['hospice'] = {'id' => 'hospice', 'image'=>'hospice', 'x'=>0, 'y'=>0, 'layer'=>'background'}
-    @battle.objects['ogre1'] = {'id' => 'ogre1', 'image'=>'ogre', 'x'=>100, 'y'=>100, 'layer'=>'token', 'size'=>'large'}
-    @battle.objects['ogre2'] = {'id' => 'ogre2', 'image'=>'ogre', 'x'=>300, 'y'=>500, 'layer'=>'token', 'size'=>'large'}
+    @battle = @campaign.battle('battle1')
+  
+    # to update the test data...
+
+    #@battle = Battle.new(:campaign=>@campaign,:name=>'battle1')
+    #@battle.info['grid_ratio'] = 30
+    #@battle.info['grid_show'] = true
+    #@battle.info['grid_offset_x'] = 10
+    #@battle.info['grid_offset_y'] = 10
+    #@battle.objects['hospice'] = {'id' => 'hospice', 'image'=>'hospice', 'x'=>0, 'y'=>0, 'layer'=>'background'}
+    #@battle.objects['ogre1'] = {'id' => 'ogre1', 'image'=>'ogre', 'x'=>100, 'y'=>100, 'layer'=>'token', 'size'=>'large'}
+    #@battle.objects['ogre2'] = {'id' => 'ogre2', 'image'=>'ogre', 'x'=>300, 'y'=>500, 'layer'=>'token', 'size'=>'large'}
+
+    #@campaign.save
+    #@battle.save
+ 
     @layers.each{|l| l.campaign = @campaign; l.battle = @battle}
     add_mouse_wheel_listener(self)
     add_mouse_motion_listener(self)
@@ -87,7 +95,7 @@ class Game < JPanel
       global_x = e.x/@scale - @tx
       global_y = e.y/@scale - @ty
       @battle.tokens.select do |o| 
-        size = @campaign.size_to_grid_squares(o['size'])
+        size = @campaign.size_to_grid_squares(o[:size])
         (global_x > o.x && global_x < (o.x + size[0] * @battle.info.grid_ratio)) &&
           (global_y > o.y && global_y < (o.y + size[1] * @battle.info.grid_ratio))
       end.each{|o| o.selected = !o.selected}

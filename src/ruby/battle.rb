@@ -36,19 +36,23 @@ class Battle
     # flush changesets
     # write new json
     # mv new -> old
-    @campaign.save_battle(@data[:name],JSON.generate(@data))
+    @campaign.save_battle_data(@data[:name],JSON.pretty_generate(@data))
   end
 
   def load
-    @data = JSON.parse(@campaign.load_battle(@data[:name]))
+    puts "[#{self.class.name}] load #{@data[:name]}"
+    @data = JSON.parse(@campaign.load_battle_data(@data[:name])).symbolize_keys
+    puts "[#{self.class.name}] loaded: #{data.inspect}"
+    self
   end
   
   # add changeset
   def change(changeset)
     # create?/update/delete
+    # {:action=>:update,:path=>[:path,:to,:key],:value=>1}
   end
 
   def tokens
-    objects.values.select{|o| o['layer']=='token'}
+    objects.values.select{|o| o[:layer]=='token'}
   end
 end

@@ -1,0 +1,37 @@
+{
+  "name": "battle1",
+  "info": {
+    "grid_ratio": 30,
+    "grid_show": true,
+    "grid_offset_x": 10,
+    "grid_offset_y": 10
+    },
+  "levels": [
+
+  ],
+  "objects": {
+    "hospice": {
+      "id": "hospice",
+      "image": "hospice",
+      "x": 0,
+      "y": 0,
+      "layer": "background"
+            },
+    "ogre1": {
+      "id": "ogre1",
+      "image": "ogre",
+      "x": 100,
+      "y": 100,
+      "layer": "token",
+      "size": "large"
+            },
+    "ogre2": {
+      "id": "ogre2",
+      "image": "ogre",
+      "x": 300,
+      "y": 500,
+      "layer": "token",
+      "size": "large"
+            }
+    }
+}
