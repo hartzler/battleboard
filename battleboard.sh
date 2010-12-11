@@ -1,2 +1,3 @@
 #!/bin/sh
-jruby src/ruby/main.rb
+# mac osx
+jruby -J-Xdock:name=BattleBoard -J-Xdock:icon=icon.gif src/ruby/main.rb
