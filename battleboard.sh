@@ -1,3 +1,3 @@
 #!/bin/sh
 # mac osx
-jruby -J-Xdock:name=BattleBoard -J-Xdock:icon=icon.gif src/ruby/main.rb
+ruby -J-cp javalib/default/log4j.jar -J-Xdock:name=BattleBoard -J-Xdock:icon=icon.gif src/ruby/main.rb

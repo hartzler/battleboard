@@ -1,2 +1,2 @@
 #!/bin/sh
-jruby src/ruby/console.rb
+ruby src/ruby/console.rb

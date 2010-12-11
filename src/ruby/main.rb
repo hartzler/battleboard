@@ -5,6 +5,8 @@ java_import java.awt.Color
 java_import java.awt.Font
 java_import java.awt.Dimension
 java_import java.awt.Toolkit
+java_import org.apache.log4j.Logger
+java_import org.apache.log4j.Level
 require "rubygems"
 require 'ostruct'
 require 'json'
@@ -28,6 +30,12 @@ local_require 'campaign'
 local_require 'battle'
 local_require 'battle_panel'
 local_require 'battle_frame'
+
+# logging
+LOGGER_PREFIX='bb'
+logger=Logger.getLogger(LOGGER_PREFIX)
+logger.add_appender org.apache.log4j.ConsoleAppender.new(org.apache.log4j.PatternLayout.new("[%d{ISO8601}][%-5p][%-25c] %m%n"))
+logger.level=Level::DEBUG
 
 # main window
 # constant for remote irb fun

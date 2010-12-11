@@ -3,7 +3,7 @@ class BattlePanel < JPanel
   include java.awt.event.MouseListener
   include java.awt.event.MouseMotionListener
 
-  attr_reader :layers, :campaign, :battle
+  attr_reader :layers, :campaign, :battle, :logger
 
   def initialize
     super() # must call for add_*_listener to work
@@ -27,6 +27,7 @@ class BattlePanel < JPanel
     add_mouse_wheel_listener(self)
     add_mouse_motion_listener(self)
     add_mouse_listener(self)
+    @logger = Logger.getLogger("#{LOGGER_PREFIX}.#{self.class.name}")
   end
  
   def paintComponent(g)
@@ -56,7 +57,7 @@ class BattlePanel < JPanel
         size = @campaign.size_to_grid_squares(o[:size])
         (global_x > o.x && global_x < (o.x + size[0] * @battle.info.grid_ratio)) &&
           (global_y > o.y && global_y < (o.y + size[1] * @battle.info.grid_ratio))
-      end.each{|o| o.selected = !o.selected}
+      end.each{|o| @battle.change(:path=>[:objects,o[:id],:selected], :value=>!o.selected)}
     end
     repaint
   end
@@ -67,13 +68,13 @@ class BattlePanel < JPanel
       @ty += (e.y - @sy)*(1.0/@scale)
       @sx = e.x
       @sy = e.y
-      puts "dragged x: %d y: %d" % [@tx,@ty]
+      logger.info "dragged x: %d y: %d" % [@tx,@ty]
     else
       global_x = e.x/@scale - @tx
       global_y = e.y/@scale - @ty
       @battle.tokens.select(&:selected).each do |o| 
-        o.x = global_x
-        o.y = global_y
+        @battle.change(:path=>[:objects,o[:id],:x],:value=>global_x)
+        @battle.change(:path=>[:objects,o[:id],:y],:value=>global_y)
       end
     end
     repaint
