@@ -1,9 +1,9 @@
 class BattleUI < JPanel
-  def initialize
+  def initialize(options={})
     super()
     @logger = Logger.getLogger("#{LOGGER_PREFIX}.#{self.class.name}")
+    @campaign = options[:campaign]
     self.opaque = false
-    self.background = Color::YELLOW
     self.setBounds(20,20,220,120)
     self.layout = BorderLayout.new
     

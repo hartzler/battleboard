@@ -5,8 +5,9 @@ class BattlePanel < JPanel
 
   attr_reader :layers, :campaign, :battle, :logger
 
-  def initialize
+  def initialize(options={})
     super() # must call for add_*_listener to work
+    @logger = Logger.getLogger("#{LOGGER_PREFIX}.#{self.class.name}")
     @command_mask = java.lang.System.getProperty("os.name").downcase.index( "mac" ) ? 256 : 128
     @scale = 1.0
     @tx = 0
@@ -17,19 +18,25 @@ class BattlePanel < JPanel
       ClearLayer.new,
       BackgroundLayer.new,
       GridLayer.new,
-      TokenLayer.new,
-      FpsLayer.new(1)
+      TokenLayer.new
     ]
-    @campaign = Campaign.new(:path=>'test/campaign1')
-    @battle = @campaign.battle('battle1')
-  
-    @layers.each{|l| l.campaign = @campaign; l.battle = @battle}
+    self.campaign=options[:campaign]
     add_mouse_wheel_listener(self)
     add_mouse_motion_listener(self)
     add_mouse_listener(self)
-    @logger = Logger.getLogger("#{LOGGER_PREFIX}.#{self.class.name}")
   end
- 
+
+  def campaign=(c)
+    @campaign = c
+    @battle = @campaign.selected_battle
+    @campaign.add_selected_battle_listener(self)
+    @layers.each{|l| l.campaign = @campaign; l.battle = @battle}
+  end
+
+  def selected_battle_changed(c,b)
+    self.campaign = c
+  end
+  
   def paintComponent(g)
     g.translate(@tx,@ty)
     g.scale(@scale,@scale)
@@ -54,7 +61,7 @@ class BattlePanel < JPanel
       global_x = e.x/@scale - @tx
       global_y = e.y/@scale - @ty
       @battle.tokens.select do |o| 
-        size = @campaign.size_to_grid_squares(o[:size])
+        size = @battle.campaign.size_to_grid_squares(o[:size])
         (global_x > o.x && global_x < (o.x + size[0] * @battle.info.grid_ratio)) &&
           (global_y > o.y && global_y < (o.y + size[1] * @battle.info.grid_ratio))
       end.each{|o| @battle.change(:path=>[:objects,o[:id],:selected], :value=>!o.selected)}

@@ -11,18 +11,23 @@
 class Campaign
   DATA_FILE_NAME = 'data.campaign'
   BATTLE_EXT = '.battle'
-  attr_reader :path, :resources, :data, :battles, :logger
+  attr_reader :path, :resources, :data, :battles, :logger, :selected_battle
   def initialize(options={})
     @logger = Logger.getLogger("#{LOGGER_PREFIX}.#{self.class.name}")
     @battles = {}  # :name => Battle # nil unless "open"
     @resources = {} # key => value of name => path
     @data = {}
     @data[:settings] = {}
+    @selected_battle_listeners = []
     load(options[:path]) if options[:path]
   end
 
   def settings
     @data[:settings]
+  end
+
+  def add_selected_battle_listener(l)
+    @selected_battle_listeners << l unless @selected_battle_listeners.include?(l)
   end
 
   def save
@@ -38,8 +43,14 @@ class Campaign
     # no prob?
   end
 
+  def select_battle(name)
+    @selected_battle = battle(name)
+    @selected_battle_listeners.each {|l| l.selected_battle_changed(self,@battle)}
+    @selected_battle
+  end
+
   def battle(name)
-    "Loading Battle #{name} ..."
+    logger.info "Loading Battle #{name} ..."
     @battles[name] ||= Battle.new(:campaign=>self,:name=>name).load
   end
 

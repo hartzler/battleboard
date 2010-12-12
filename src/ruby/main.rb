@@ -8,6 +8,8 @@ java_import java.awt.Toolkit
 java_import java.awt.BorderLayout
 java_import org.apache.log4j.Logger
 java_import org.apache.log4j.Level
+java_import java.awt.event.KeyEvent
+java_import java.awt.event.KeyListener
 require "rubygems"
 require 'ostruct'
 require 'json'
@@ -23,7 +25,6 @@ local_require 'overrides'
 local_require 'render_layer'
 local_require 'background_layer'
 local_require 'clear_layer'
-local_require 'fps_layer'
 local_require 'grid_layer'
 local_require 'image_loader'
 local_require 'token_layer'
