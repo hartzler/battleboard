@@ -42,7 +42,7 @@ class BattlePanel < JPanel
       @tx -= (e.x/@scale) - e.x/(@scale+amt)
       @ty -= (e.y/@scale) - e.y/(@scale+amt)
       @scale += amt 
-      repaint
+      redraw 
     end
   end
 
@@ -59,7 +59,7 @@ class BattlePanel < JPanel
           (global_y > o.y && global_y < (o.y + size[1] * @battle.info.grid_ratio))
       end.each{|o| @battle.change(:path=>[:objects,o[:id],:selected], :value=>!o.selected)}
     end
-    repaint
+    redraw
   end
 
   def mouseDragged(e)
@@ -77,7 +77,11 @@ class BattlePanel < JPanel
         @battle.change(:path=>[:objects,o[:id],:y],:value=>global_y)
       end
     end
-    repaint
+    redraw
+  end
+  
+  def redraw
+    parent.parent.repaint
   end
 
   def mouseMoved(e); end

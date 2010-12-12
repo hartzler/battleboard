@@ -10,6 +10,7 @@ class Battle
   
   attr_reader :campaign, :data, :logger
   def initialize(options)
+    @logger = Logger.getLogger("#{LOGGER_PREFIX}.#{self.class.name}")
     @campaign = options[:campaign] or raise "Campaign required"
     @images = {}
     @change_listeners = []
@@ -18,7 +19,6 @@ class Battle
     @data[:info] = {} # battle meta info
     @data[:levels] = [] # {},{},{}... order by zorder; 
     @data[:objects] = {} # id => props
-    @logger = Logger.getLogger("#{LOGGER_PREFIX}.#{self.class.name}")
   end
 
   def data

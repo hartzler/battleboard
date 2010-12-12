@@ -5,6 +5,7 @@ java_import java.awt.Color
 java_import java.awt.Font
 java_import java.awt.Dimension
 java_import java.awt.Toolkit
+java_import java.awt.BorderLayout
 java_import org.apache.log4j.Logger
 java_import org.apache.log4j.Level
 require "rubygems"
@@ -30,6 +31,8 @@ local_require 'campaign'
 local_require 'battle'
 local_require 'battle_panel'
 local_require 'battle_frame'
+local_require 'battle_ui'
+local_require 'rounded_panel'
 
 # logging
 LOGGER_PREFIX='bb'

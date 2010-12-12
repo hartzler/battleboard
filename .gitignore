@@ -1,3 +1,4 @@
+*.swp
 test/campaign1/resources/images/*
 .ivy
 javalib
