@@ -49,7 +49,7 @@ class BattlePanel < JPanel
     amt = - e.wheel_rotation / 50.0
     if @scale + amt > 0.1 && @scale + amt < 10.0
       @tx -= (e.getX/@scale) - e.getX/(@scale+amt)
-      @ty -= (e.getX/@scale) - e.getY/(@scale+amt)
+      @ty -= (e.getY/@scale) - e.getY/(@scale+amt)
       @scale += amt 
       redraw 
     end
