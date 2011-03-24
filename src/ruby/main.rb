@@ -34,6 +34,8 @@ local_require 'battle_panel'
 local_require 'battle_frame'
 local_require 'battle_ui'
 local_require 'rounded_panel'
+local_require 'light_layer'
+local_require 'blocking_layer'
 
 # logging
 LOGGER_PREFIX='bb'
